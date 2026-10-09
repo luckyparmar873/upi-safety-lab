@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#5f259f">
+<title>UPI Safety Lab</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;background:#f3f1f8;color:#25213b;
+  font-family:Arial,sans-serif
+}
+header{
+  background:#5f259f;color:white;padding:22px 18px;
+  border-radius:0 0 22px 22px
+}
+header h2{margin:0 0 8px}
+.demo{
+  background:#fff0c2;color:#654600;text-align:center;
+  padding:10px;font-size:13px;font-weight:bold
+}
+.balance{
+  margin:18px;background:white;padding:22px;
+  border-radius:16px
+}
+.balance small{color:#666}
+.amount{font-size:30px;color:#5f259f;font-weight:bold;margin:12px 0}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:18px}
+button{
+  border:0;border-radius:10px;padding:14px;
+  font-size:15px;font-weight:bold;cursor:pointer
+}
+.action{background:#5f259f;color:white}
+.card{background:white;margin:18px;padding:20px;border-radius:16px}
+input{
+  width:100%;padding:13px;margin:9px 0 15px;
+  border:1px solid #ccc;border-radius:9px;font-size:16px
+}
+.note{font-size:13px;line-height:1.6;color:#666}
+#result{white-space:pre-line;line-height:1.7;margin-top:15px}
+.item{border-bottom:1px solid #eee;padding:12px 0;font-size:14px}
+footer{text-align:center;padding:20px;font-size:12px;color:#666}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h2>UPI Safety Lab</h2>
+  <div>Online Payment Safety Demo</div>
+</header>
+
+<div class="demo">
+  EDUCATIONAL DEMO — REAL MONEY NAHI
+</div>
+
+<section class="balance">
+  <small>Virtual Demo Balance</small>
+  <div class="amount" id="balance">₹1,00,000.00</div>
+  <div class="note">
+    Yeh virtual balance hai. Kisi bank account se connected nahi hai.
+  </div>
+</section>
+
+<div class="grid">
+  <button class="action" onclick="showPay()">📱 Number se Pay</button>
+  <button class="action" onclick="showScan()">▦ Scan & Pay</button>
+</div>
+
+<section class="card" id="panel">
+  <h3>🛡️ Scam se bacho</h3>
+  <p>Sirf payment screenshot ya successful animation asli payment ka proof nahi hota.</p>
+  <button class="action" onclick="showPay()">Demo shuru karo</button>
+</section>
+
+<section class="card">
+  <h3>📋 Demo Transaction History</h3>
+  <div id="history" class="note">Abhi koi demo transaction nahi hai.</div>
+</section>
+
+<section class="card">
+  <h3>⚠️ Security Alert</h3>
+  <p class="note">
+    Payment verify karne ke liye apne bank ke official records check karo.
+    Kisi ko UPI PIN ya OTP mat batao. Paise receive karne ke liye UPI PIN ki zaroorat nahi hoti.
+  </p>
+</section>
+
+<footer>
+  UPI Safety Lab · Independent educational project · Not affiliated with PhonePe
+</footer>
+
+<script>
+let balance = 100000;
+let count = 0;
+
+function showPay(){
+ document.getElementById('panel').innerHTML = `
+  <h3>Number se Payment — Demo</h3>
+  <label>Demo mobile number</label>
+  <input id="mobile" inputmode="numeric" maxlength="10"
+   placeholder="10-digit number">
+  <label>Virtual amount (₹)</label>
+  <input id="money" type="number" min="1" max="100000"
+   placeholder="Amount">
+  <button class="action" onclick="payDemo()">Simulate Payment</button>
+  <div id="result"></div>
+  <p class="note">Asli UPI PIN, OTP ya password kabhi enter mat karo.</p>
+ `;
+}
+
+function payDemo(){
+ const mobile=document.getElementById('mobile').value.trim();
+ const amount=Number(document.getElementById('money').value);
+ const result=document.getElementById('result');
+
+ if(!/^[0-9]{10}$/.test(mobile)){
+  result.textContent='Demo ke liye 10-digit number enter karo.';
+  return;
+ }
+
+ if(!Number.isFinite(amount)||amount<=0||amount>balance){
+  result.textContent='Valid virtual amount enter karo.';
+  return;
+ }
+
+ balance-=amount;
+ count++;
+
+ document.getElementById('balance').textContent=
+  balance.toLocaleString('en-IN',{
+   style:'currency',currency:'INR'
+  });
+
+ result.textContent=
+  'DEMO ONLY — REAL PAYMENT NAHI\n'+
+  'Simulation complete\n'+
+  'Demo number: '+mobile+'\n'+
+  'Virtual amount: ₹'+amount.toLocaleString('en-IN')+'\n'+
+  'Demo reference: DEMO-'+String(count).padStart(4,'0')+
+  '\n\nYeh transaction asli nahi hai.';
+
+ const entry=document.createElement('div');
+ entry.className='item';
+ entry.textContent='DEMO-'+String(count).padStart(4,'0')+
+  ' · ₹'+amount.toLocaleString('en-IN')+' · SIMULATION ONLY';
+
+ const history=document.getElementById('history');
+ if(count===1) history.textContent='';
+ history.prepend(entry);
+}
+
+function showScan(){
+ document.getElementById('panel').innerHTML=`
+  <h3>Scan & Pay — Demo</h3>
+  <div style="font-size:65px;text-align:center;padding:20px">▦</div>
+  <p>Yeh sirf scanner ka demonstration screen hai. QR scan ya real payment nahi hoti.</p>
+  <p class="note">QR code se payment karne se pehle recipient ka naam aur amount verify karo.</p>
+  <button class="action" onclick="showPay()">Payment Demo</button>
+ `;
+}
+</script>
+
+</body>
+</html>
